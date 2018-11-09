@@ -32,6 +32,8 @@ module Firehose
     def server
       begin
         Firehose::Server::App.new(options).start
+        Thread.new { EM.run } unless EM.reactor_running?
+        Thread.pass until EM.reactor_running?
       rescue => e
         Firehose.logger.error "#{e.message}: #{e.backtrace}"
         raise e
