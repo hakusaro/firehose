@@ -55,7 +55,7 @@ module Firehose
             callback { read_and_respond }.
             errback do |e|
               log req, "failed with write value to redis: #{e.inspect}"
-              EM.next_tick { env['async.callback'].call response(500) }
+              EM.next_tick { return response(500) }
             end
         end
 
@@ -71,15 +71,15 @@ module Firehose
             callback do |val|
               if val == TEST_VALUE
                 log req, 'succeeded'
-                EM.next_tick { env['async.callback'].call response(200) }
+                EM.next_tick { return response(200) }
               else
                 log req, "failed with unexpected value retrieved from redis: #{val.inspect}"
-                EM.next_tick { env['async.callback'].call response(500) }
+                EM.next_tick { return response(500) }
               end
             end.
             errback do |e|
               log req, "failed with read value from redis: #{e.inspect}"
-              EM.next_tick { env['async.callback'].call response(500) }
+              EM.next_tick { return response(500) }
             end
         end
       end

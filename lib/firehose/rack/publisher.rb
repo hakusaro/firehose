@@ -30,10 +30,10 @@ module Firehose
             Firehose.logger.debug "HTTP published #{body.inspect} to #{path.inspect} with ttl #{ttl.inspect}"
             opts = { :ttl => ttl }.merge(parse_options(env))
             publisher.publish(path, body, opts).callback do
-              EM.next_tick { env['async.callback'].call response(202, '', 'Content-Type' => 'text/plain') }
+              EM.next_tick { return response(202, '', 'Content-Type' => 'text/plain') }
             end.errback do |e|
               Firehose.logger.debug "Error publishing: #{e.inspect}"
-              EM.next_tick { env['async.callback'].call response(500, 'Error when trying to publish', 'Content-Type' => 'text/plain') }
+              EM.next_tick { return response(500, 'Error when trying to publish', 'Content-Type' => 'text/plain') }
             end
           end
 
