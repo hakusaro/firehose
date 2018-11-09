@@ -10,10 +10,7 @@ module Firehose
         @server = opts[:server] || :rainbows
 
         Firehose.logger.info "Starting #{Firehose::VERSION} '#{Firehose::CODENAME}', in #{ENV['RACK_ENV']}"
-        Thread.new { EM.run } unless EM.reactor_running?
-        Thread.pass until EM.reactor_running?
-        Firehose.logger.info "Started EM server in theory?"
-        Firehose.logger.info "EM reactor running? #{EM.reactor_running?}"
+
         Firehose::Server::MetricsCollector.new.start
       end
 
